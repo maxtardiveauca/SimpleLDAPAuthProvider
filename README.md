@@ -1,5 +1,5 @@
 # SimpleLDAPAuthProvider
-A JavaScript only auth provider example that uses a public LDAP server
+A JavaScript only auth provider example that uses a public LDAP server.
 
 This is a simple LDAP authentication provider for CA Live API Creator.
 It connects to a public LDAP server (`ldap.forumsys.com`), which recognizes
