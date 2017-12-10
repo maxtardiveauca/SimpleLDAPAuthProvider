@@ -26,7 +26,7 @@ function SimpleLDAPAuthProvider () {
 
 	// This gets called to validate the user payload against LDAP service
 	result.authenticate = function authenticate(payload) {
-
+        java.lang.System.out.println("Authenticating with LDAP: " + payload.username);
 		var authResponse = {
 			roleNames: [],
 			userIdentifier: payload.username,
@@ -58,7 +58,16 @@ function SimpleLDAPAuthProvider () {
 		try {
 			// First, can we connect? If not, then either the user is unknown,
 			// or the password is wrong, and this will throw an exception.
-			var ctx = new InitialDirContext(env);
+			var ctx = null;
+			
+			try {
+    			ctx = new InitialDirContext(env);
+			}
+			catch(e) {
+    			return {
+    				errorMessage: "Unable to authenticate with LDAP server: " + e.getMessage()
+    			}
+			}
 
 			// Next, we retrieve the mail and phone attributes of the user, if present
 			var attrs = ctx.getAttributes(userCN, ["mail", "telephoneNumber"]);
@@ -68,14 +77,49 @@ function SimpleLDAPAuthProvider () {
 				authResponse.userData[attrib.getID()] = attrib.get().toString();
 			}
 			
-			// Finally, we look for all the groups that contain our user
+			// If there are multi-valued attributes, this is how to retrieve them
+			//attrs = ctx.getAttributes(userCN, ["groups"]);
+			//attrsEnum = attrs.getAll();
+			//if (attrsEnum.hasMore()) {
+    		//	var mvAttr = attrsEnum.next();
+    		//    for (var groupName in mvAttr.getStringValueArray()) {
+    		//        // For example, we're only interested in groups starting with "LAC-"
+    		//        if (groupName.startsWith("LAC-")) {
+    		//            authResponse.roleNames.push(groupName.substring(4));
+    		//        }
+    		//    }
+			//}
+
+			// Look for all the groups that contain our user. This is highly dependent
+			// on your LDAP schema -- many schemas store the memberships in the users.
 			var SearchControls = Java.type("javax.naming.directory.SearchControls");
 			var ctls = new SearchControls();
 			ctls.setReturningAttributes(["ou"]);
 			var answer = ctx.search("dc=example,dc=com", 
 					"(&(objectClass=groupOfUniqueNames)(uniqueMember=" + userCN + "))", ctls);
 			while (answer.hasMore()) {
-				authResponse.roleNames.push(answer.next().getAttributes().get("ou").get());
+			    var groupName = answer.next().getAttributes().get("ou").get();
+			    if (groupName == "scientists") {
+			        java.lang.System.out.println("User " + payload.username +
+			            " is a scientist and therefore gets full access.");
+    				authResponse.roleNames.push("Full access");
+			    }
+			    else if (groupName == "mathematicians") {
+			        java.lang.System.out.println("User " + payload.username +
+			            " is a mathematician and therefore gets read-only access.");
+    				authResponse.roleNames.push("Read only");
+			    }
+			    else {
+			        // Ignore other groups
+			        java.lang.System.out.println("Ignoring group: " + groupName);
+			    }
+			}
+			if ( ! authResponse.roleNames.length) {
+			    java.lang.System.out.println("User " + payload.username + " gets no access");
+    			return {
+    				errorMessage: "User " + payload.username + 
+    				    " is neither a mathematician nor a scientist: access denied."
+    			}
 			}
 		}
 		catch(e) {
@@ -84,6 +128,7 @@ function SimpleLDAPAuthProvider () {
 			}
 		}
 
+	    java.lang.System.out.println("Point 4");
 		return authResponse;
 	};
 
