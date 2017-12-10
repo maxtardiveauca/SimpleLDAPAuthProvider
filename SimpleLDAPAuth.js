@@ -4,7 +4,8 @@
 // All users have the same password: "password" (without quotes).
 // Each user belongs to a group: chemists, mathematicians, or scientists.
 // Each user has an attribute named mail, and some users have an attribute named telephoneNumber.
-// To adapt this to your specific LDAP enviornment, you will have to change this to fit
+//
+// To adapt this to your specific LDAP environment, you will have to change the code to fit
 // your schema, e.g. what attribures are relevant, how you figure out which roles a user has, etc...
 //
 // To install this, import this script as a library (API Properties -> Libraries -> Create New Library)
@@ -64,7 +65,7 @@ function SimpleLDAPAuthProvider () {
     			ctx = new InitialDirContext(env);
 			}
 			catch(e) {
-    			return {
+	    		return {
     				errorMessage: "Unable to authenticate with LDAP server: " + e.getMessage()
     			}
 			}
