@@ -128,7 +128,6 @@ function SimpleLDAPAuthProvider () {
 			}
 		}
 
-	    java.lang.System.out.println("Point 4");
 		return authResponse;
 	};
 
