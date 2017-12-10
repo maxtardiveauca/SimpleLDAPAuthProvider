@@ -52,6 +52,7 @@ function SimpleLDAPAuthProvider () {
 		env.put("java.naming.security.authentication", "simple");
 		env.put("java.naming.security.principal", userCN);
 		env.put("java.naming.security.credentials", payload.password);
+		env.put("java.naming.referral", "follow");
 		
 		var InitialDirContext = Java.type("javax.naming.directory.InitialDirContext");
 		try {
