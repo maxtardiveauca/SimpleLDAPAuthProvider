@@ -36,6 +36,9 @@ function SimpleLDAPAuthProvider () {
 			// We hard-code userInfo here, but you can add information that will be returned
 			// to the authenticator in the response, along with the auth token.
 			userInfo: {typeOfPerson: 'Cool'},
+			// If you are writing an auth provider for use with the *admin* project,
+			// then you will need to include the accountIdent in the userInfo, e.g.:
+			// userInfo: {typeOfPerson: 'Cool', accountIdent: 1000},
 			// If you know when and from where this user last logged in, you can
 			// optionally return it here.
 			lastLogin : {
