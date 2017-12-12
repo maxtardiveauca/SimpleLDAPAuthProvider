@@ -68,9 +68,9 @@ function SimpleLDAPAuthProvider () {
     			ctx = new InitialDirContext(env);
 			}
 			catch(e) {
-	    		return {
-    				errorMessage: "Unable to authenticate with LDAP server: " + e.getMessage()
-    			}
+				return {
+					errorMessage: "Unable to authenticate with LDAP server: " + e.getMessage()
+				}
 			}
 
 			// Next, we retrieve the mail and phone attributes of the user, if present
@@ -86,12 +86,14 @@ function SimpleLDAPAuthProvider () {
 			//attrsEnum = attrs.getAll();
 			//if (attrsEnum.hasMore()) {
     		//	var mvAttr = attrsEnum.next();
-    		//    for (var groupName in mvAttr.getStringValueArray()) {
-    		//        // For example, we're only interested in groups starting with "LAC-"
-    		//        if (groupName.startsWith("LAC-")) {
-    		//            authResponse.roleNames.push(groupName.substring(4));
-    		//        }
-    		//    }
+			//	var attrEnum = mvAttr.getAll();
+    		//	while (attrEnum.hasMore()) {
+			//		var groupName = attrEnum.next();
+    		//		// For example, we're only interested in groups starting with "LAC-"
+    		//		if (groupName.startsWith("LAC-")) {
+    		//			authResponse.roleNames.push(groupName.substring(4));
+    		//		}
+    		//	}
 			//}
 
 			// Look for all the groups that contain our user. This is highly dependent
