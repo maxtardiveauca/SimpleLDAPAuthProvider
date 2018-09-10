@@ -31,7 +31,7 @@ function SimpleLDAPAuthProvider () {
 		var authResponse = {
 			roleNames: [],
 			userIdentifier: payload.username,
-			keyLifetimeSeconds: configSetup.keyLifetimeMinutes,
+			keyLifetimeSeconds: configSetup.keyLifetimeMinutes*60,
 			userData: {},
 			// We hard-code userInfo here, but you can add information that will be returned
 			// to the authenticator in the response, along with the auth token.
